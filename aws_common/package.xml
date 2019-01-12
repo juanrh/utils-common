@@ -12,8 +12,9 @@
 
   <buildtool_depend>cmake</buildtool_depend>
   <buildtool_depend>git</buildtool_depend>
+  <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>catkin</build_depend>
+  <!-- <build_depend>catkin</build_depend> -->
   <build_depend>ros_environment</build_depend>
   <depend>zlib</depend>
   <depend>uuid</depend>
@@ -21,6 +22,7 @@
   <depend>libssl-dev</depend>
 
   <test_depend>gtest</test_depend>
+  <test_depend>google-mock</test_depend>
   <export>
     <build_type>cmake</build_type>
   </export>

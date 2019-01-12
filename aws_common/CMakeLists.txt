@@ -79,12 +79,15 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 ### Tests ###
 #############
 enable_testing()
+
+find_package(catkin REQUIRED)
 find_package(GTest QUIET)
+# find_package(GMock)
 if(NOT GTEST_FOUND)
   message(STATUS "Could not find GTest. Not building unit tests.")
 else()
-  include_directories(/usr/include/gmock /usr/src/gmock)
-  add_library(libgmock /usr/src/gmock/src/gmock-all.cc)
+  # include_directories(/usr/include/gmock /usr/src/gmock)
+  # add_library(libgmock /usr/src/gmock/src/gmock-all.cc)
 
   add_library(test_utils test/sdk_utils/parameter_reader_mock.cpp)
   target_include_directories(test_utils PUBLIC ${PROJECT_SOURCE_DIR}/test/include)
@@ -107,27 +110,44 @@ else()
         ${PROJECT_NAME})
   add_test(NAME test_throttling_manager COMMAND test_throttling_manager --gtest_output=xml:test_results/)
 
-  add_executable(test_client_configuration_provider test/sdk_utils/client_configuration_provider_test.cpp)
-  target_include_directories(test_client_configuration_provider PRIVATE ${aws_common_INCLUDE_DIRS})
-  target_link_libraries(test_client_configuration_provider
-         ${GTEST_LIBRARIES}
-         pthread
-         libgmock
-         test_utils
-         ${aws_common_LIBRARIES}
-         ${PROJECT_NAME})
-  add_test(NAME test_client_configuration_provider COMMAND test_client_configuration_provider --gtest_output=xml:test_results/)
+  catkin_package()
+  # FIXME restore catkin_add_gmock
+  # add_executable(test_client_configuration_provider test/sdk_utils/client_configuration_provider_test.cpp)
+  catkin_add_gmock(test_client_configuration_provider test/sdk_utils/client_configuration_provider_test.cpp)
+  # catkin_add_gtest(test_client_configuration_provider test/sdk_utils/client_configuration_provider_test.cpp)
+  # target_include_directories(test_client_configuration_provider PRIVATE ${aws_common_INCLUDE_DIRS})
+  # target_link_libraries(test_client_configuration_provider
+  #        ${GTEST_LIBRARIES} # unncesary with catkin_add_gmock?
+  #        pthread
+  #        ${GMOCK_LIBRARIES} # unncesary with catkin_add_gmock?
+  #        test_utils
+  #        ${aws_common_LIBRARIES}
+  #        ${PROJECT_NAME})
+  # # add_test(NAME test_client_configuration_provider COMMAND test_client_configuration_provider --gtest_output=xml:test_results/)
+  # add_test(NAME test_client_configuration_provider COMMAND make run_tests_aws_common_gtest_test_client_configuration_provider --gtest_output=xml:test_results/)
 
-  add_executable(test_service_credentials_provider test/sdk_utils/auth/service_credentials_provider_test.cpp)
-  target_include_directories(test_service_credentials_provider PRIVATE ${aws_common_INCLUDE_DIRS})
-  target_link_libraries(test_service_credentials_provider
-         ${GTEST_LIBRARIES}
-         pthread
-         libgmock
-         test_utils
-         ${aws_common_LIBRARIES}
-         ${PROJECT_NAME})
-  add_test(NAME test_service_credentials_provider COMMAND test_service_credentials_provider --gtest_output=xml:test_results/)
+
+  # add_executable(test_client_configuration_provider test/sdk_utils/client_configuration_provider_test.cpp)
+  # target_include_directories(test_client_configuration_provider PRIVATE ${aws_common_INCLUDE_DIRS})
+  # target_link_libraries(test_client_configuration_provider
+  #        ${GTEST_LIBRARIES}
+  #        pthread
+  #        libgmock
+  #        test_utils
+  #        ${aws_common_LIBRARIES}
+  #        ${PROJECT_NAME})
+  # add_test(NAME test_client_configuration_provider COMMAND test_client_configuration_provider --gtest_output=xml:test_results/)
+
+  # add_executable(test_service_credentials_provider test/sdk_utils/auth/service_credentials_provider_test.cpp)
+  # target_include_directories(test_service_credentials_provider PRIVATE ${aws_common_INCLUDE_DIRS})
+  # target_link_libraries(test_service_credentials_provider
+  #        ${GTEST_LIBRARIES}
+  #        pthread
+  #        libgmock
+  #        test_utils
+  #        ${aws_common_LIBRARIES}
+  #        ${PROJECT_NAME})
+  # add_test(NAME test_service_credentials_provider COMMAND test_service_credentials_provider --gtest_output=xml:test_results/)
 endif()
 
 #############
