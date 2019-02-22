@@ -43,6 +43,6 @@ script:
   # copy the code over to the docker container
   - docker cp $TRAVIS_BUILD_DIR "$ROS_DISTRO"-container:/"$ROS_DISTRO"_ws/src/
   # execute build scripts and run test
-  - docker exec "$ROS_DISTRO"-container /bin/bash -c 'sh /shared/.ros_ci/ros"$ROS_VERSION"_build.sh' || travis_terminate 1;
+  - travis_wait docker exec "$ROS_DISTRO"-container /bin/bash -c 'sh /shared/.ros_ci/ros"$ROS_VERSION"_build.sh' || travis_terminate 1;
   # upload coverage report to codecov
   - bash <(curl -s https://codecov.io/bash) -Z
